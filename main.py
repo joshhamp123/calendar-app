@@ -48,3 +48,26 @@ def view_tasks():
         for row in reader:          # Loop through each row
             print(row)              # Print the row to the screen
 
+
+# This function deletes a task using its ID
+def delete_task():
+    print("\n--- Delete Task ---")
+    delete_id = input("Enter the ID of the task to delete: ")   # Ask for ID
+
+    tasks = []   # List to store all tasks
+
+    # Read all tasks from the CSV file
+    with open(FILENAME, "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            tasks.append(row)
+
+    # Write back only the tasks that do NOT match the ID
+    with open(FILENAME, "w", newline="") as file:
+        writer = csv.writer(file)
+        for row in tasks:
+            if row[0] != delete_id:   # Keep all rows except the one to delete
+                writer.writerow(row)
+
+    print("Task deleted (if it existed).")   # Confirmation message
+
