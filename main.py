@@ -71,3 +71,31 @@ def delete_task():
 
     print("Task deleted (if it existed).")   # Confirmation message
 
+
+# This is the main menu loop that runs the program
+def main():
+    setup_file()   # Make sure the CSV file exists before starting
+
+    while True:   # Loop forever until the user chooses to exit
+        print("\n=== Task Manager ===")
+        print("1. Add Task")
+        print("2. View Tasks")
+        print("3. Delete Task")
+        print("4. Exit")
+
+        choice = input("Choose an option: ")   # Ask the user for a menu choice
+
+        if choice == "1":
+            add_task()        # Call the add task function
+        elif choice == "2":
+            view_tasks()      # Call the view tasks function
+        elif choice == "3":
+            delete_task()     # Call the delete task function
+        elif choice == "4":
+            print("Goodbye")  # Exit message
+            break             # Break the loop to end the program
+        else:
+            print("Invalid choice")   # Handle wrong input
+
+
+main()   # Start the program
