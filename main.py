@@ -11,4 +11,32 @@ def setup_file():
             writer = csv.writer(file)   # Create a CSV writer object
             writer.writerow(["id", "title", "date"])   # Write the header row
 
+# This function adds a new task to the CSV file
+def add_task():
+    print("\n--- Add Task ---")
+    title = input("Enter task title: ")   # Ask the user for the task title
+    date = input("Enter task date (YYYY-MM-DD): ")   # Ask for the task date
+
+    tasks = []   # List to store all tasks temporarily
+
+    # Read all existing tasks so we can find the next ID
+    with open(FILENAME, "r") as file:
+        reader = csv.reader(file)   # Read the CSV file
+        for row in reader:          # Loop through each row
+            tasks.append(row)       # Add each row to the list
+
+    # If only the header exists, start IDs at 1
+    if len(tasks) <= 1:
+        next_id = 1
+    else:
+        last_id = int(tasks[-1][0])   # Get the last task's ID
+        next_id = last_id + 1         # New ID is last ID + 1
+
+    # Write the new task to the CSV file
+    with open(FILENAME, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([next_id, title, date])   # Add the new task row
+
+    print("Task added!")   # Confirmation message
+
 
