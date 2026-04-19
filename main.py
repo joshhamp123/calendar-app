@@ -1,5 +1,6 @@
 import csv   # Allows the program to read and write CSV files
 import os    # Allows the program to check if the CSV file exists
+from datetime import datetime   # Used for validating date and time formats
 
 FILENAME = "tasks.csv"   # The name of the CSV file where tasks will be stored
 
@@ -9,21 +10,55 @@ def setup_file():
     if not os.path.exists(FILENAME):   # Check if the file is missing
         with open(FILENAME, "w", newline="") as file:   # Create the file in write mode
             writer = csv.writer(file)   # Create a CSV writer object
-            writer.writerow(["id", "title", "date"])   # Write the header row
+            writer.writerow(["id", "title", "date", "time"])   # Write the header row
+
+
+# Helper function to validate date input
+def get_valid_date():
+    while True:
+        date_input = input("Enter task date (YYYY-MM-DD): ")
+        try:
+            # Try converting the input into a date
+            datetime.strptime(date_input, "%Y-%m-%d")
+            return date_input   # Return valid date
+        except ValueError:
+            print("Invalid date format. Please use YYYY-MM-DD.")
+
+
+# Helper function to validate time input
+def get_valid_time():
+    while True:
+        time_input = input("Enter task time (HH:MM, 24-hour format): ")
+        try:
+            # Try converting the input into a time
+            datetime.strptime(time_input, "%H:%M")
+            return time_input   # Return valid time
+        except ValueError:
+            print("Invalid time format. Please use HH:MM (24-hour).")
+
 
 # This function adds a new task to the CSV file
 def add_task():
     print("\n--- Add Task ---")
-    title = input("Enter task title: ")   # Ask the user for the task title
-    date = input("Enter task date (YYYY-MM-DD): ")   # Ask for the task date
+
+    # Ask for task title and ensure it's not empty
+    while True:
+        title = input("Enter task title: ").strip()
+        if title == "":
+            print("Title cannot be empty.")
+        else:
+            break
+
+    date = get_valid_date()   # Ask for a valid date
+    time = get_valid_time()   # Ask for a valid time
 
     tasks = []   # List to store all tasks temporarily
 
     # Read all existing tasks so we can find the next ID
     with open(FILENAME, "r") as file:
-        reader = csv.reader(file)   # Read the CSV file
-        for row in reader:          # Loop through each row
-            tasks.append(row)       # Add each row to the list
+        reader = csv.reader(file)
+        for row in reader:
+            tasks.append(row)
 
     # If only the header exists, start IDs at 1
     if len(tasks) <= 1:
@@ -35,7 +70,7 @@ def add_task():
     # Write the new task to the CSV file
     with open(FILENAME, "a", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow([next_id, title, date])   # Add the new task row
+        writer.writerow([next_id, title, date, time])   # Add the new task row
 
     print("Task added!")   # Confirmation message
 
@@ -44,15 +79,15 @@ def add_task():
 def view_tasks():
     print("\n--- All Tasks ---")
     with open(FILENAME, "r") as file:
-        reader = csv.reader(file)   # Read the CSV file
-        for row in reader:          # Loop through each row
-            print(row)              # Print the row to the screen
+        reader = csv.reader(file)
+        for row in reader:
+            print(row)   # Print each row to the screen
 
 
 # This function deletes a task using its ID
 def delete_task():
     print("\n--- Delete Task ---")
-    delete_id = input("Enter the ID of the task to delete: ")   # Ask for ID
+    delete_id = input("Enter the ID of the task to delete: ")
 
     tasks = []   # List to store all tasks
 
@@ -98,4 +133,6 @@ def main():
             print("Invalid choice")   # Handle wrong input
 
 
-main()   # Start the program
+# Proper Python entry point
+if __name__ == "__main__":
+    main()
