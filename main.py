@@ -40,3 +40,11 @@ def add_task():
     print("Task added!")   # Confirmation message
 
 
+# This function displays all tasks in the CSV file
+def view_tasks():
+    print("\n--- All Tasks ---")
+    with open(FILENAME, "r") as file:
+        reader = csv.reader(file)   # Read the CSV file
+        for row in reader:          # Loop through each row
+            print(row)              # Print the row to the screen
+
